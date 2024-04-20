@@ -1,34 +1,37 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import { FaArrowRight } from "react-icons/fa";
-import TopProduct from '../TopProduct/TopProduct';
 
 
 
-function Top ()  {
 
 
-    const data1=[
-        {
-            Timg:"src/assets/images/bed1.png",
-            Tpara:"Hospital Bed",
-            Tpara1:"$190.90"
-        },
-        {
-            Timg:"src/assets/images/stick.png",
-            Tpara:"Walker Mobility",
-            Tpara1:"$12.98"
-        },
-        {
-            Timg:"src/assets/images/wheel.png",
-            Tpara:" WheelChair",
-            Tpara1:"$30.87"
-        },
-        {
-            Timg:"src/assets/images/stickyy.png",
-            Tpara:"Crutches",
-            Tpara1:"$24.75"
+function Top() {
+
+    const [products, setProducts] = useState([])
+
+
+ 
+
+    useEffect(() => {
+        fetchdata()
+    }, [])
+
+    const fetchdata = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/api/admin/getall-products')
+
+            setProducts(response.data.result)
+
+        } catch (error) {
+
         }
-    ]
+    }
+ 
+
+
+ 
+
 
 
 
@@ -37,35 +40,54 @@ function Top ()  {
 
  return (
     <div className=''>
-        <div className='flex justify-between'>
-            <h2 className='font-extrabold text-green-600'>Top Products</h2>
-            <div className='flex space-x-3'>
-            <button className='font-bold text-green-600'>View All</button>
-            <FaArrowRight/>
+            <div className='flex justify-between'>
+                <h2 className='font-extrabold text-green-800'>Top Products</h2>
+                <div className='flex space-x-3'>
+                    <button className='font-extrabold text-green-600'>View All</button>
+                    <FaArrowRight />
+                </div>
+
+
             </div>
 
+            <div className='flex flex-wrap gap-5 justify-center'>
+
+                {
+                    products.map((item) => {
+                        return (
+                            <>
+
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                  
+                                        <img src={item.image} alt="" className='h-72 w-56' />
+                                        <div className=''>
+                                            <p className='flex justify-center items-center'>{item.name}</p>
+                                            <p className='flex justify-center items-center'>{item.price}</p>
+
+                                        </div>
+
+                                        <div className=''>
+                                        <button className="bg-green-500 py-2 w-full text-white rounded-lg text-lg">Add to Cart</button>
+
+                                        </div>
+                                  
+
+                                   
+                                </tr>
+                            </>
+                        )
+                    })
+                }
+
+         
+
+            </div >
+
+
+
 
         </div>
 
-        <div className='flex flex-wrap gap-5 justify-center'>
-            {
-               data1.map((item)=>{
-                    return(
-                        <>
-                      <div>
-                        <TopProduct Timg={item.Timg}  Tpara={item.Tpara} Tpara1={item.Tpara1} />
-
-                      </div>
-
-                        </>
-                    )
-                })
-            }
-        </div>
-
-
-
-    </div>
 
 
 

@@ -1,12 +1,34 @@
 
-import React from "react";
+import React, { useState } from "react";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 
 const Header = () => {
+
+  const [search ,setSearch] = useState("")
+  const [searchResult,setSearchResult] = useState("")
+
+
+  const handleSubmitSearch = async(srch)=>{
+    try{
+      const response = await axios.get(
+        `http://localhost:3000/api/products/search?name=${srch}`
+      );
+      console.log(response.data);
+      setSearchResult(response.data.result)
+    }catch (error) {
+      console.log(error);
+
+    }
+  }
+
+
+
   return (
     <>
       <header className="flex justify-center gap-6 h-[110px]">
@@ -57,12 +79,17 @@ const Header = () => {
                 id="search-dropdown"
                 className="block p-2.5 w-full z-20 text-sm bg-gray-50 rounded-e-lg rounded-s-gray-100 rounded-s-2 border border-gray-300 dark:placeholder-gray-400 dark:text-white"
                 placeholder="Search medicines, medical products"
-                required
+                required onChange={(e)=>{
+                  setSearch(e.target.value)
+                  handleSubmitSearch(e.target.value)
+           
+                }
+              }
               />
               <button
-                type="submit"
-                className="absolute top-0 end-0 p-2.5 h-full text-sm font-medium text-white rounded-e-lg border focus:ring-4 focus:outline-none bg-green-600 hover:bg-green-900"
-              >
+                type="button" onClick={handleSubmitSearch}   
+                className="absolute top-0 end-0 p-2.5 h-full text-sm font-medium text-white rounded-e-lg border focus:ring-4 focus:outline-none bg-green-600 hover:bg-green-900 hidden  md:block px-4"
+                >search</button>
                 <svg
                   className="w-4 h-4"
                   aria-hidden="true"
@@ -78,15 +105,18 @@ const Header = () => {
                     d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                   />
                 </svg>
-              </button>
+          
             </div>
           </div>
         </form>
       </div>
       <div className=" flex justify-between mt-10 gap-3">
-        <FavoriteBorderIcon />
-        <ShoppingBagIcon />
-        <AccountCircleIcon />
+  
+        <Link to={"wishlist"}>      <FavoriteBorderIcon  /> </Link> 
+        <Link to={"cart"}>  <ShoppingBagIcon /> </Link>
+        <Link to={"accounts"}>    <AccountCircleIcon /></Link>
+        
+
       </div>
     </header>
     <hr />

@@ -2,20 +2,25 @@ import React from "react";
 import Blog1 from "../Blog1/Blog1";
 import Blog0 from "../Blog0/Blog0";
 import Minicard from "../Minicard/Minicard";
-import Cards from "../Cards/Cards";
-import NewProduct from "../NewProduct/NewProduct";
-import BlackOil from "../BlackOil/BlackOil";
+import NewProduct from "../Cards/Cards";
+import Poppular from "../NewProduct/NewProduct";
+import Banner from "../Banner/Banner";
 import Top from "../Top/Top";
 import SecondCard from "../SecondCard/SecondCard";
 import Medical from "../Medical/Medical";
 import Upcoming from "../Upcoming/Upcoming";
 import Blog3 from "../Blog3/Blog3";
 import Blog4 from "../Blog4/Blog4";
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
+import Successfull from "../Payment/Successfull";
 
 
 function Home(){
     return(
         <>
+
+        <Header/>
          <div className="">
             <Blog0/>
         </div>
@@ -30,17 +35,19 @@ function Home(){
         </div>
 
         <div className="">
-            <Cards/>
-
-        </div>
-
-        <div className="">
+            {/* new product */}
             <NewProduct/>
 
         </div>
 
         <div className="">
-            <BlackOil/>
+            {/* poppular */}
+            <Poppular/>
+
+        </div>
+
+        <div className="">
+            <Banner/>
 
         </div>
 
@@ -69,12 +76,17 @@ function Home(){
 
         </div>
 
-        <div className="">
+        <div claBlog4ssName="">
             <Blog4/>
 
         </div>
-        
 
+        <div claBlog4ssName="">
+            {/* <Successfull/> */}
+
+        </div>
+        
+        <Footer/>
 
        
 

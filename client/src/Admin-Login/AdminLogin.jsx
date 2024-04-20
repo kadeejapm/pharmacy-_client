@@ -1,93 +1,54 @@
 import { useState } from "react";
-import InputField from "../Components/Forms/InputField/InputField";
-import { NavLink } from "react-router-dom";
-import { errorToast,successToast } from "../Components/Toast";
 
+import { Link, useNavigate } from "react-router-dom";
+
+import { errorToast, successToast } from "../Components/Toast";
+import axios from "axios";
 
 
 
 function AdminLogin() {
 
-  
+  const navigate = useNavigate()
 
-  const [formFiled, setFormField] = useState({});
+  const [fname, setFname] = useState('')
+  const [lname, setLname] = useState('')
+  const [email, setEmail] = useState('')
 
-  const formdatas = [
-    {
-      type: "email",
-      placeholder: "E-Mail",
-      className: "",
-      name: "email",
-    },
-    {
-      type: "password",
-      placeholder: "Password",
-      className: "",
-      name: "password",
-    },
-  ];
+  const [password, setPassword] = useState('')
 
-  const onChangeValues = (e) => {
-    console.log(e.target.value);
-    setFormField({ ...formFiled, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formFiled);
     try {
-      const response = await adminLogin(formFiled)
- 
-       successToast(response.data.message)
+      const response = await axios.post('http://localhost:3000/api/admin/login',
+        {email: email, password: password })
+    navigate('/admin')
+    successToast(response.data.message)
+  } catch (error) {
+    console.log(error.response.data.message,'errr');
+    errorToast(error.response.data.message)
+  }
+};
+return (
+  <div className="flex justify-center items-center flex-col h-screen">
+    <form
+      onSubmit={handleSubmit}
+      action=""
+      className="w-1/3 rounded-md bg-green-600 h-[500px] flex justify-center flex-col gap-5 items-center "
+    >
 
-       console.log(response.data.token);
+      <input type="text" onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="{max - w - [300px] w-[80%] h-[40px] bg-white flex justify-start ps-5 rounded-md items-center} "/>
+      <input type="text" onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="{max - w - [300px] w-[80%] h-[40px] bg-white flex justify-start ps-5 rounded-md items-center} "/>
 
-       if(!response.data.token){
-        return errorToast('token is not provided')
-       }
-
-       localStorage.setItem("token",response.data.token)
-       
-    
-     } catch (error) {
-       errorToast(error.response.data.message,'error')
-     }
-  };
-
-
-  return (
-    <div className="flex justify-center items-center flex-col h-screen">
-      <form
-        onSubmit={handleSubmit}
-        action=""
-        className="w-[40%] rounded-md bg-green-600 h-[400px] flex justify-center flex-col gap-5 items-center"
-      >
-        <h2 className="text-white text-xl">Login</h2>
-        {formdatas.map(({ className, placeholder, type, name }, index) => (
-          <InputField
-            onChange={onChangeValues}
-            key={index}
-            type={type}
-            placeholder={placeholder}
-            name={name}
-            className={`${className} max-w-[300px] w-[80%] h-[40px] bg-white flex justify-start ps-5 rounded-md items-center`}
-          />
-        ))}
-
-
-        <NavLink to={'/home'}>
-        <input
-        
-          type="submit"
-          className="text-white border-solid border-2 border-green-300 w-[4  0%]"
-        />
-        </NavLink>
-        <NavLink to={'/admin-register'}>
-        <p className="text-white text-xs underline "> SignIn  </p>
-        </NavLink>
-      </form>
-    </div>
-  );
+      <input
+        type="submit"
+        className="text-white border-solid border-2 border-green-200 bg-green-500 w-24 rounded-2xl"
+      />
+      <Link to={"/admin-register"}>
+        <p className="text-white  font-semibold text-xs underline ">Sign up </p>
+      </Link>
+    </form>
+  </div>
+);
 }
-
 export default AdminLogin;

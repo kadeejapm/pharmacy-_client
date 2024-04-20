@@ -1,34 +1,37 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import { FaArrowRight } from "react-icons/fa";
-import UpcomingPro from '../UpcomingPro/UpcomingPro';
 
 
 
-function Upcoming ()  {
 
 
-    const data1=[
-        {
-            Uimg:"src/assets/images/foley catheter.png",
-            Uname:"Wound Dressing ",
-            Upara:"12.90"
-        },
-        {
-            Uimg:"https://media.seniority.in/catalog/product/cache/242b55c74bcaf9102cfc5599e255893a/m/c/mcp-ad801-ir_1.jpg",
-            Uname:"IV Catheter",
-            Upara:"$8.98"
-        },
-        {
-            Uimg:"https://physicaltherapyreviewer.files.wordpress.com/2014/09/nrb.jpg",
-            Uname:"Pressure Cuff",
-            Upara:"$5.87"
-        },
-        {
-            Uimg:"https://5.imimg.com/data5/SELLER/Default/2020/11/BK/HE/CA/7318943/maxiocel-10x10jpg.jpg",
-            Uname:"Chest Tube",
-            Upara:"$25.75"
+function Upcoming() {
+
+    const [products, setProducts] = useState([])
+
+
+ 
+
+    useEffect(() => {
+        fetchdata()
+    }, [])
+
+    const fetchdata = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/api/admin/getall-products')
+
+            setProducts(response.data.result)
+
+        } catch (error) {
+
         }
-    ]
+    }
+ 
+
+
+ 
+
 
 
 
@@ -37,35 +40,54 @@ function Upcoming ()  {
 
  return (
     <div className=''>
-        <div className='flex justify-between'>
-            <h2 className='font-extrabold text-green-600'>Upcoming Products</h2>
-            <div className='flex space-x-3'>
-            <button className='font-bold text-green-600'>View All</button>
-            <FaArrowRight/>
+            <div className='flex justify-between'>
+                <h2 className='font-extrabold text-green-800'>Upcoming Products</h2>
+                <div className='flex space-x-3'>
+                    <button className='font-extrabold text-green-600'>View All</button>
+                    <FaArrowRight />
+                </div>
+
+
             </div>
 
+            <div className='flex flex-wrap gap-5 justify-center'>
+
+                {
+                    products.map((item) => {
+                        return (
+                            <>
+
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                  
+                                        <img src={item.image} alt="" className='h-72 w-56' />
+                                        <div className=''>
+                                            <p className='flex justify-center items-center'>{item.name}</p>
+                                            <p className='flex justify-center items-center'>{item.price}</p>
+
+                                        </div>
+
+                                        <div className=''>
+                                        <button className="bg-green-500 py-2 w-full text-white rounded-lg text-lg">Add to Cart</button>
+
+                                        </div>
+                                  
+
+                                   
+                                </tr>
+                            </>
+                        )
+                    })
+                }
+
+         
+
+            </div >
+
+
+
 
         </div>
 
-        <div className='flex flex-wrap gap-5 justify-center'>
-            {
-               data1.map((item)=>{
-                    return(
-                        <>
-                      <div>
-                        <UpcomingPro Uimg={item.Uimg}  Uname={item.Uname} Upara={item.Upara} />
-
-                      </div>
-
-                        </>
-                    )
-                })
-            }
-        </div>
-
-
-
-    </div>
 
 
 

@@ -1,32 +1,51 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'  
 import { FaArrowRight } from "react-icons/fa";
-import CardProduct from '../CardProducts/CardProducts';
-
-function Cards ()  {
+import { successToast } from '../Toast';
 
 
-    const data1=[
-        {
-            img:"src/assets/images/foley catheter.png",
-            para:"Foley Catether",
-            para1:"12.90"
-        },
-        {
-            img:"https://media.seniority.in/catalog/product/cache/242b55c74bcaf9102cfc5599e255893a/m/c/mcp-ad801-ir_1.jpg",
-            para:"Thermometer",
-            para1:"$8.98"
-        },
-        {
-            img:"https://physicaltherapyreviewer.files.wordpress.com/2014/09/nrb.jpg",
-            para:" breath mask",
-            para1:"$5.87"
-        },
-        {
-            img:"https://5.imimg.com/data5/SELLER/Default/2020/11/BK/HE/CA/7318943/maxiocel-10x10jpg.jpg",
-            para:"Wound dressing",
-            para1:"$25.75"
+
+
+
+function Cards() {
+
+    const [products, setProducts] = useState([])
+
+
+    useEffect(() => {
+        fetchdata()
+    }, [])
+
+    const fetchdata = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/api/admin/getall-products')
+
+            setProducts(response.data.result)
+
+        } catch (error) {
+
         }
-    ]
+    }
+ 
+
+    // add to cart
+    const handleAddToCart = async(id)=>{
+        try {
+
+
+            let data = {
+                userId:localStorage.getItem("id"),
+                productId:id
+            }
+            const response = await axios.post('http://localhost:3000/api/add-to-cart',data)
+            successToast(response.data.message)
+           } catch (error) {
+             errorToast(error.response.data.message || error.message || 'error')
+           }
+    }
+    // --------------
+ 
+
 
 
 
@@ -35,35 +54,55 @@ function Cards ()  {
 
  return (
     <div className=''>
-        <div className='flex justify-between'>
-            <h2 className='font-extrabold text-green-600'>New Products</h2>
-            <div className='flex space-x-3'>
-            <button className='font-bold text-green-600'>View All</button>
-            <FaArrowRight/>
+            <div className='flex justify-between'>
+                <h2 className='font-extrabold text-green-800'>New Products</h2>
+                <div className='flex space-x-3'>
+                    <button className='font-extrabold text-green-600'>View All</button>
+                    <FaArrowRight />
+                </div>
+
+
             </div>
 
+            <div className='flex flex-wrap gap-5 justify-center'>
+
+                {
+                    products.map((item) => {
+                        return (
+                            <>
+
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                  
+                                        <img src={item.image} alt="" className='h-72 w-56' />
+                                        <div className=''>
+                                            <p className='flex justify-center items-center'>{item.name}</p>
+                                            <p className='flex justify-center items-center'>{item.price}</p>
+
+                                        </div>
+
+                                        <div className=''>
+                                            {/* add to cart */}
+                                        <button onClick={()=>handleAddToCart(item._id)} className="bg-green-500 py-2 w-full text-white rounded-lg text-lg">Add to Cart</button>
+
+                                        </div>
+                                  
+
+                                   
+                                </tr>
+                            </>
+                        )
+                    })
+                }
+
+         
+
+            </div >
+
+
+
 
         </div>
 
-        <div className='flex flex-wrap gap-5 justify-center'>
-            {
-               data1.map((item)=>{
-                    return(
-                        <>
-                      <div>
-                        <CardProduct img={item.img}  name={item.para} para={item.para1} />
-
-                      </div>
-
-                        </>
-                    )
-                })
-            }
-        </div>
-
-
-
-    </div>
 
 
 

@@ -1,33 +1,37 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import { FaArrowRight } from "react-icons/fa";
-import MediProducts from '../MediProducts/MediProducts';
 
 
-function Medical ()  {
 
 
-    const data1=[
-        {
-            Mimg:"src/assets/images/pulse.png",
-            Mname:"Sphygmomanometer",
-            Mpara:"12.90"
-        },
-        {
-            Mimg:"src/assets/images/sthesco.png ",
-            Mname:"Stethoscope",
-            Mpara:"$8.98"
-        },
-        {
-            Mimg:"src/assets/images/oximeter2.png",
-            Mname:"Glucometer",
-            Mpara:"$5.87"
-        },
-        {
-            Mimg:"src/assets/images/oximeter.png",
-            Mname:"Pulse Oximeter",
-            Mpara:"$25.75"
+
+function Medical() {
+
+    const [products, setProducts] = useState([])
+
+
+ 
+
+    useEffect(() => {
+        fetchdata()
+    }, [])
+
+    const fetchdata = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/api/admin/getall-products')
+
+            setProducts(response.data.result)
+
+        } catch (error) {
+
         }
-    ]
+    }
+ 
+
+
+ 
+
 
 
 
@@ -36,35 +40,54 @@ function Medical ()  {
 
  return (
     <div className=''>
-        <div className='flex justify-between'>
-            <h2 className='font-extrabold text-green-600'>Medical Products</h2>
-            <div className='flex space-x-3'>
-            <button className='font-bold text-green-600'>View All</button>
-            <FaArrowRight/>
+            <div className='flex justify-between'>
+                <h2 className='font-extrabold text-green-800'>Medical Products</h2>
+                <div className='flex space-x-3'>
+                    <button className='font-extrabold text-green-600'>View All</button>
+                    <FaArrowRight />
+                </div>
+
+
             </div>
 
+            <div className='flex flex-wrap gap-5 justify-center'>
+
+                {
+                    products.map((item) => {
+                        return (
+                            <>
+
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                  
+                                        <img src={item.image} alt="" className='h-72 w-56' />
+                                        <div className=''>
+                                            <p className='flex justify-center items-center'>{item.name}</p>
+                                            <p className='flex justify-center items-center'>{item.price}</p>
+
+                                        </div>
+
+                                        <div className=''>
+                                        <button className="bg-green-500 py-2 w-full text-white rounded-lg text-lg">Add to Cart</button>
+
+                                        </div>
+                                  
+
+                                   
+                                </tr>
+                            </>
+                        )
+                    })
+                }
+
+         
+
+            </div >
+
+
+
 
         </div>
 
-        <div className='flex flex-wrap gap-5 justify-center'>
-            {
-               data1.map((item)=>{
-                    return(
-                        <>
-                      <div>
-                        <MediProducts Mimg={item.Mimg}  Mname={item.Mname} Mpara={item.Mpara} />
-
-                      </div>
-
-                        </>
-                    )
-                })
-            }
-        </div>
-
-
-
-    </div>
 
 
 
